@@ -1,0 +1,25 @@
+{
+  "name": "arquivo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "bin": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Rebecca Turner <me@re-becca.org> (http://re-becca.org/)",
+  "license": "ISC",
+  "dependencies": {
+    "mkdirp": "^0.5.1",
+    "npm-package-arg": "^5.0.1",
+    "npm5": "^5.0.0-beta.64",
+    "osenv": "^0.1.4",
+    "rimraf": "^2.6.1",
+    "signal-exit": "^3.0.2",
+    "tar": "^3.1.3",
+    "which": "^1.2.12",
+    "yargs": "^7.0.2"
+  },
+  "devDependencies": {},
+  "description": ""
+}
