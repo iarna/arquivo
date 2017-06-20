@@ -21,5 +21,8 @@
     "yargs": "^7.0.2"
   },
   "devDependencies": {},
-  "description": ""
+  "description": "",
+  "files": [
+    "index.js"
+  ]
 }
