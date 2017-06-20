@@ -16,7 +16,7 @@ const startingDir = process.cwd()
 const install = argv._[0] || startingDir
 const spec = npa(install, startingDir)
 const workdir = path.join(osenv.tmpdir(), 'arquivo-' + process.pid)
-const npm = `${__dirname}/node_modules/npm5/bin/npm-cli.js`
+const npm = `${__dirname}/node_modules/npm/bin/npm-cli.js`
 
 mkdirp.sync(path.join(workdir, 'node_modules'))
 process.chdir(workdir)
