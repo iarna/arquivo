@@ -40,8 +40,40 @@ inst.on('close', function (code) {
   console.error(`Packing ${outname}`)
   const tar = require('tar')
   const zlib = require('zlib')
-  const prefix = path.join(workdir, 'node_modules')
+  const prefix = `${workdir}/node_modules`
   const outpath = `${startingDir}/${outname}`
+  try {
+    const pjson = require(`${prefix}/${name}/package.json`)
+    delete pjson.bundledDependencies
+    pjson.bundleDependencies = fs.readdirSync(`${prefix}/${name}/node_modules`).filter(f => !/^[.]/.test(f))
+    fs.writeFileSync(`${prefix}/${name}/package.json`, JSON.stringify(pjson, null, 2))
+  } catch (x) {
+  }
+  try {
+    let lock = require(`${workdir}/package-lock.json`)
+    lock = lock.dependencies[name]
+    lock.lockfileVersion = 1
+    delete lock.resolved
+    delete lock.integrity
+    // it shouldn't be necessary to mark these as such in the shrinkwrap,
+    // but there was an early npm@5 bug that would result in the bundle
+    // being ignored w/o this.
+    markAsBundled(lock)
+    fs.writeFileSync(`${prefix}/${name}/npm-shrinkwrap.json`, JSON.stringify(lock, null, 2))
+
+    function markAsBundled (lock) {
+      if (!lock.dependencies) return
+      Object.keys(lock.dependencies).forEach(d => {
+        lock.dependencies[d].bundled = true
+        markAsBundled(lock.dependencies[d])
+      })
+    }
+  } catch (x) {
+  }
   process.chdir(prefix)
-  tar.c({gzip:true, file: outpath, portable: true, sync: true}, [name])
+  tar.c({gzip:true, file: outpath, portable: true, sync: true, filter: (p, s) => {
+    if (s.isSymbolicLink()) return false
+    if (path.basename(p) === '.bin') return false
+    return true
+  }}, [name])
 })
